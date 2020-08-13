@@ -36,7 +36,10 @@ func (c *CLI) Ping(url string, auth []string) error {
 	if err != nil {
 		return err
 	}
-	req.SetBasicAuth(auth[0], auth[1])
+	if len(auth) == 2 {
+		c.auth = auth
+		req.SetBasicAuth(auth[0], auth[1])
+	}
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return err
@@ -47,7 +50,6 @@ func (c *CLI) Ping(url string, auth []string) error {
 	}
 
 	c.url = fmt.Sprintf("%s/_sql?format=txt", url)
-	c.auth = auth
 	fmt.Println("Success connect to", url)
 	return nil
 }
@@ -109,6 +111,9 @@ func (c *CLI) exec(stmt string) {
 	}
 
 	req, err := http.NewRequest("POST", c.url, body)
+	if len(c.auth) == 2 {
+		req.SetBasicAuth(c.auth[0], c.auth[1])
+	}
 	if err != nil {
 		fmt.Println(err.Error())
 		return

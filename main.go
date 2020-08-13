@@ -3,9 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 func argsHandle(_ *cobra.Command, args []string) error {
@@ -22,7 +23,8 @@ func handleCmd(cmd *cobra.Command, args []string) error {
 	autoStr := cmd.Flag("auth").Value.String()
 
 	auth := strings.Split(autoStr, ":")
-	if len(auth) != 2 {
+
+	if len(autoStr) != 0 && len(auth) != 2 {
 		return errors.New("parse auth information failed")
 	}
 
